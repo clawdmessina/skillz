@@ -1,0 +1,46 @@
+{
+  "root": {
+    "x": 257.8,
+    "y": 213
+  },
+  "cat-design": {
+    "x": 439.9,
+    "y": 370.1
+  },
+  "skill-web-design-guidelines": {
+    "x": 372.2,
+    "y": 524.7
+  },
+  "skill-frontend-design": {
+    "x": 556.8,
+    "y": 525.3
+  },
+  "cat-playground": {
+    "x": 82.9,
+    "y": 369.5
+  },
+  "tpl-design-playground": {
+    "x": -51.9,
+    "y": 531.5
+  },
+  "tpl-data-explorer": {
+    "x": 218.7,
+    "y": 528.4
+  },
+  "tpl-concept-map": {
+    "x": 216.4,
+    "y": 464.2
+  },
+  "tpl-document-critique": {
+    "x": 78.3,
+    "y": 463.5
+  },
+  "tpl-diff-review": {
+    "x": -50.3,
+    "y": 464.2
+  },
+  "tpl-code-map": {
+    "x": 84.6,
+    "y": 530.2
+  }
+}
