@@ -1,0 +1,79 @@
+{
+  "tree": {
+    "id": "root",
+    "label": "skillz",
+    "type": "root",
+    "children": [
+      {
+        "id": "cat-design",
+        "label": "design",
+        "type": "category",
+        "children": [
+          {
+            "id": "skill-web-design-guidelines",
+            "label": "web design guidelines",
+            "type": "skill",
+            "skillPath": "skills/design/web-design-guidelines/SKILL.md"
+          },
+          {
+            "id": "skill-frontend-design",
+            "label": "frontend design",
+            "type": "skill",
+            "skillPath": "skills/design/frontend-design/SKILL.md"
+          }
+        ]
+      },
+      {
+        "id": "cat-playground",
+        "label": "playground",
+        "type": "category",
+        "skillPath": "skills/playground/playground/SKILL.md",
+        "hasSelectMarker": true,
+        "children": [
+          {
+            "id": "tpl-design-playground",
+            "label": "design playground",
+            "type": "template",
+            "templatePath": "skills/playground/playground/templates/design-playground.md",
+            "parentSkill": "cat-playground"
+          },
+          {
+            "id": "tpl-data-explorer",
+            "label": "data explorer",
+            "type": "template",
+            "templatePath": "skills/playground/playground/templates/data-explorer.md",
+            "parentSkill": "cat-playground"
+          },
+          {
+            "id": "tpl-concept-map",
+            "label": "concept map",
+            "type": "template",
+            "templatePath": "skills/playground/playground/templates/concept-map.md",
+            "parentSkill": "cat-playground"
+          },
+          {
+            "id": "tpl-document-critique",
+            "label": "document critique",
+            "type": "template",
+            "templatePath": "skills/playground/playground/templates/document-critique.md",
+            "parentSkill": "cat-playground"
+          },
+          {
+            "id": "tpl-diff-review",
+            "label": "diff review",
+            "type": "template",
+            "templatePath": "skills/playground/playground/templates/diff-review.md",
+            "parentSkill": "cat-playground"
+          },
+          {
+            "id": "tpl-code-map",
+            "label": "code map",
+            "type": "template",
+            "templatePath": "skills/playground/playground/templates/code-map.md",
+            "parentSkill": "cat-playground"
+          }
+        ]
+      }
+    ]
+  }
+}
