@@ -73,15 +73,9 @@ export function buildFlowElements(tree, layout) {
   const nodes = [];
   const edges = [];
 
-  function computeLeafCount(node) {
-    if (!node.children || node.children.length === 0) return 1;
-    return node.children.reduce((sum, c) => sum + computeLeafCount(c), 0);
-  }
-
   const size = GRAPH_SIZE;
   const cx = size / 2;
   const cy = size / 2;
-  const ringRadii = [0, size * 0.2, size * 0.42];
 
   function getPosition(id, fallbackX, fallbackY) {
     if (layout[id]) {
@@ -90,75 +84,43 @@ export function buildFlowElements(tree, layout) {
     return { x: fallbackX, y: fallbackY };
   }
 
-  // Root
-  const rootPos = getPosition(tree.id, cx, cy);
-  nodes.push({
-    id: tree.id,
-    type: 'skillNode',
-    position: rootPos,
-    data: { label: tree.label, nodeType: 'root', node: tree },
-  });
-
-  if (!tree.children) return { nodes, edges };
-
-  const totalLeaves = computeLeafCount(tree);
-  let angleOffset = -Math.PI / 2;
-  const fullArc = Math.PI * 2;
-  const ring1Gap = 0.06;
-
-  tree.children.forEach((cat) => {
-    const catLeaves = computeLeafCount(cat);
-    const catArc = (catLeaves / totalLeaves) * (fullArc - ring1Gap * tree.children.length);
-
-    const catAngle = angleOffset + catArc / 2;
-    const catFallbackX = cx + Math.cos(catAngle) * ringRadii[1];
-    const catFallbackY = cy + Math.sin(catAngle) * ringRadii[1];
-    const catPos = getPosition(cat.id, catFallbackX, catFallbackY);
+  // Recursively walk the tree and create nodes + edges at any depth.
+  function walk(node, parent, depth, fallbackX, fallbackY) {
+    const isRoot = depth === 0;
+    const nodeType = isRoot ? 'root' : node.type;
+    const pos = getPosition(node.id, fallbackX, fallbackY);
 
     nodes.push({
-      id: cat.id,
+      id: node.id,
       type: 'skillNode',
-      position: catPos,
-      data: { label: cat.label, nodeType: 'category', node: cat },
+      position: pos,
+      data: { label: node.label, nodeType, node },
     });
 
-    edges.push({
-      id: `e-${tree.id}-${cat.id}`,
-      source: tree.id,
-      target: cat.id,
-      type: 'smoothstep',
-    });
-
-    if (cat.children && cat.children.length > 0) {
-      const childCount = cat.children.length;
-      const childArcStart = angleOffset;
-      const childArcPer = catArc / childCount;
-
-      cat.children.forEach((child, j) => {
-        const childAngle = childArcStart + childArcPer * (j + 0.5);
-        const childFallbackX = cx + Math.cos(childAngle) * ringRadii[2];
-        const childFallbackY = cy + Math.sin(childAngle) * ringRadii[2];
-        const childPos = getPosition(child.id, childFallbackX, childFallbackY);
-
-        nodes.push({
-          id: child.id,
-          type: 'skillNode',
-          position: childPos,
-          data: { label: child.label, nodeType: child.type, node: child },
-        });
-
-        edges.push({
-          id: `e-${cat.id}-${child.id}`,
-          source: cat.id,
-          target: child.id,
-          type: 'smoothstep',
-        });
+    if (parent) {
+      edges.push({
+        id: `e-${parent.id}-${node.id}`,
+        source: parent.id,
+        target: node.id,
+        type: 'smoothstep',
       });
     }
 
-    angleOffset += catArc + ring1Gap;
-  });
+    if (node.children && node.children.length > 0) {
+      const ringRadius = size * (0.15 + depth * 0.18);
+      const spreadAngle = Math.PI * 0.8;
+      const count = node.children.length;
 
+      node.children.forEach((child, i) => {
+        const angle = -Math.PI / 2 + (i - (count - 1) / 2) * (spreadAngle / Math.max(count - 1, 1));
+        const childFallbackX = fallbackX + Math.cos(angle) * ringRadius;
+        const childFallbackY = fallbackY + Math.sin(angle) * ringRadius + ringRadius;
+        walk(child, node, depth + 1, childFallbackX, childFallbackY);
+      });
+    }
+  }
+
+  walk(tree, null, 0, cx, cy);
   return { nodes, edges };
 }
 
@@ -219,15 +181,7 @@ export function getLoadoutItems(selected, nodeMap, parentMap, contents) {
   const items = [];
   selected.forEach(id => {
     const node = nodeMap[id];
-    if (node.type === 'skill') {
-      items.push({
-        id: node.id,
-        name: node.label,
-        path: getCategoryPath(id, parentMap, nodeMap),
-        type: 'skill',
-        content: contents[node.skillPath] || '',
-      });
-    } else if (node.type === 'template') {
+    if (node.type === 'template') {
       items.push({
         id: node.id,
         name: node.label,
@@ -235,13 +189,21 @@ export function getLoadoutItems(selected, nodeMap, parentMap, contents) {
         type: 'template',
         content: contents[node.templatePath] || '',
       });
-    } else if (node.type === 'category' && node.skillPath) {
+    } else if (node.skillPath && node.hasSelectMarker) {
       items.push({
         id: node.id,
         name: node.label + ' (core)',
-        path: '',
+        path: getCategoryPath(id, parentMap, nodeMap),
         type: 'skill',
         content: getSkillCoreContent(node.skillPath, contents),
+      });
+    } else if (node.skillPath) {
+      items.push({
+        id: node.id,
+        name: node.label,
+        path: getCategoryPath(id, parentMap, nodeMap),
+        type: 'skill',
+        content: contents[node.skillPath] || '',
       });
     }
   });
@@ -254,18 +216,10 @@ export function getLoadoutItems(selected, nodeMap, parentMap, contents) {
 export function stitchLoadout(selected, nodeMap, contents) {
   const parts = [];
 
-  // Standalone skills
+  // Skills with select marker: include core content + selected templates
   selected.forEach(id => {
     const node = nodeMap[id];
-    if (node.type === 'skill' && node.skillPath) {
-      parts.push(contents[node.skillPath] || '');
-    }
-  });
-
-  // Category-skills with their selected templates
-  selected.forEach(id => {
-    const node = nodeMap[id];
-    if (node.type === 'category' && node.skillPath && node.hasSelectMarker) {
+    if (node.skillPath && node.hasSelectMarker) {
       const core = getSkillCoreContent(node.skillPath, contents);
       parts.push(core);
       if (node.children) {
@@ -275,6 +229,14 @@ export function stitchLoadout(selected, nodeMap, contents) {
           }
         });
       }
+    }
+  });
+
+  // Standalone skills (no select marker)
+  selected.forEach(id => {
+    const node = nodeMap[id];
+    if (node.skillPath && !node.hasSelectMarker && node.type !== 'template') {
+      parts.push(contents[node.skillPath] || '');
     }
   });
 

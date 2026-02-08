@@ -41,7 +41,7 @@ function SkillNode({ id, data }) {
       <Handle type="target" position={Position.Top} style={{ opacity: 0, pointerEvents: 'none' }} />
       <Handle type="source" position={Position.Bottom} style={{ opacity: 0, pointerEvents: 'none' }} />
 
-      {!isRoot && (
+      {!isRoot && nodeType !== 'category' && (
         <span className={`node-type-badge badge-${nodeType}`}>
           {nodeType}
         </span>

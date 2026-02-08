@@ -6,10 +6,16 @@
     "type": "root",
     "children": [
       {
-        "id": "cat-design",
-        "label": "design",
+        "id": "cat-frontend",
+        "label": "frontend",
         "type": "category",
         "children": [
+          {
+            "id": "skill-frontend-design",
+            "label": "frontend design",
+            "type": "skill",
+            "skillPath": "skills/design/frontend-design/SKILL.md"
+          },
           {
             "id": "skill-web-design-guidelines",
             "label": "web design guidelines",
@@ -17,17 +23,73 @@
             "skillPath": "skills/design/web-design-guidelines/SKILL.md"
           },
           {
-            "id": "skill-frontend-design",
-            "label": "frontend design",
+            "id": "skill-ui-ux-pro-max",
+            "label": "ui/ux pro max",
             "type": "skill",
-            "skillPath": "skills/design/frontend-design/SKILL.md"
+            "skillPath": "skills/frontend/ui-ux-pro-max/SKILL.md"
+          },
+          {
+            "id": "skill-vercel-react-best-practices",
+            "label": "react best practices",
+            "type": "skill",
+            "skillPath": "skills/frontend/vercel-react-best-practices/SKILL.md"
+          }
+        ]
+      },
+      {
+        "id": "cat-documents",
+        "label": "documents",
+        "type": "category",
+        "children": [
+          {
+            "id": "skill-xlsx",
+            "label": "xlsx",
+            "type": "skill",
+            "skillPath": "skills/documents/xlsx/SKILL.md"
+          },
+          {
+            "id": "skill-pdf",
+            "label": "pdf",
+            "type": "skill",
+            "skillPath": "skills/documents/pdf/SKILL.md"
+          },
+          {
+            "id": "skill-docx",
+            "label": "docx",
+            "type": "skill",
+            "skillPath": "skills/documents/docx/SKILL.md"
+          },
+          {
+            "id": "skill-pptx",
+            "label": "pptx",
+            "type": "skill",
+            "skillPath": "skills/documents/pptx/SKILL.md"
+          }
+        ]
+      },
+      {
+        "id": "cat-marketing",
+        "label": "marketing",
+        "type": "category",
+        "children": [
+          {
+            "id": "skill-seo-audit",
+            "label": "seo audit",
+            "type": "skill",
+            "skillPath": "skills/marketing/seo-audit/SKILL.md"
+          },
+          {
+            "id": "skill-programmatic-seo",
+            "label": "programmatic seo",
+            "type": "skill",
+            "skillPath": "skills/marketing/programmatic-seo/SKILL.md"
           }
         ]
       },
       {
         "id": "cat-playground",
         "label": "playground",
-        "type": "category",
+        "type": "skill",
         "skillPath": "skills/playground/playground/SKILL.md",
         "hasSelectMarker": true,
         "children": [

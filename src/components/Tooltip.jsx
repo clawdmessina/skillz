@@ -7,15 +7,15 @@ function Tooltip({ node, position, contents }) {
   if (!node || !position) return <div className="tooltip" id="tooltip"></div>;
 
   let desc = null;
-  if (node.type === 'skill' || (node.type === 'category' && node.skillPath)) {
+  if (node.skillPath) {
     const raw = contents[node.skillPath] || '';
     desc = extractDescription(raw);
   } else if (node.type === 'template') {
     const raw = contents[node.templatePath] || '';
     const firstLine = raw.split('\n').find(l => l.trim() && !l.startsWith('#') && !l.startsWith('---'));
     if (firstLine) desc = firstLine.trim();
-  } else if (node.type === 'category') {
-    const childCount = node.children ? node.children.length : 0;
+  } else if (node.children) {
+    const childCount = node.children.length;
     desc = `click to select all ${childCount} skills`;
   }
 

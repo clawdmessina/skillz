@@ -1,46 +1,27 @@
 {
-  "root": {
-    "x": 257.8,
-    "y": 213
-  },
-  "cat-design": {
-    "x": 439.9,
-    "y": 370.1
-  },
-  "skill-web-design-guidelines": {
-    "x": 372.2,
-    "y": 524.7
-  },
-  "skill-frontend-design": {
-    "x": 556.8,
-    "y": 525.3
-  },
-  "cat-playground": {
-    "x": 82.9,
-    "y": 369.5
-  },
-  "tpl-design-playground": {
-    "x": -51.9,
-    "y": 531.5
-  },
-  "tpl-data-explorer": {
-    "x": 218.7,
-    "y": 528.4
-  },
-  "tpl-concept-map": {
-    "x": 216.4,
-    "y": 464.2
-  },
-  "tpl-document-critique": {
-    "x": 78.3,
-    "y": 463.5
-  },
-  "tpl-diff-review": {
-    "x": -50.3,
-    "y": 464.2
-  },
-  "tpl-code-map": {
-    "x": 84.6,
-    "y": 530.2
-  }
+  "root": { "x": 1175, "y": 30 },
+
+  "cat-frontend": { "x": 150, "y": 200 },
+  "skill-frontend-design": { "x": -150, "y": 380 },
+  "skill-web-design-guidelines": { "x": 50, "y": 380 },
+  "skill-ui-ux-pro-max": { "x": 250, "y": 380 },
+  "skill-vercel-react-best-practices": { "x": 450, "y": 380 },
+
+  "cat-documents": { "x": 900, "y": 200 },
+  "skill-xlsx": { "x": 700, "y": 380 },
+  "skill-pdf": { "x": 900, "y": 380 },
+  "skill-docx": { "x": 1100, "y": 380 },
+  "skill-pptx": { "x": 1300, "y": 380 },
+
+  "cat-marketing": { "x": 1700, "y": 200 },
+  "skill-seo-audit": { "x": 1600, "y": 380 },
+  "skill-programmatic-seo": { "x": 1800, "y": 380 },
+
+  "cat-playground": { "x": 2200, "y": 200 },
+  "tpl-diff-review": { "x": 1950, "y": 380 },
+  "tpl-document-critique": { "x": 2100, "y": 380 },
+  "tpl-design-playground": { "x": 2250, "y": 380 },
+  "tpl-code-map": { "x": 2400, "y": 380 },
+  "tpl-concept-map": { "x": 2100, "y": 500 },
+  "tpl-data-explorer": { "x": 2250, "y": 500 }
 }
