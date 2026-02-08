@@ -95,6 +95,20 @@ describe('prepare script', () => {
     expect(topLevelIds).toContain('skill-playground')
   })
 
+  it('includes overviewPath when skills/OVERVIEW.md exists', () => {
+    runPrepare()
+
+    const manifest = JSON.parse(fs.readFileSync(path.join(root, 'public/skills.json'), 'utf-8'))
+
+    // OVERVIEW.md exists in the skills directory, so overviewPath should be set
+    const overviewExists = fs.existsSync(path.join(root, 'skills', 'OVERVIEW.md'))
+    if (overviewExists) {
+      expect(manifest.overviewPath).toBe('skills/OVERVIEW.md')
+    } else {
+      expect(manifest.overviewPath).toBeUndefined()
+    }
+  })
+
   it('skillPath points to actual files', () => {
     runPrepare()
 

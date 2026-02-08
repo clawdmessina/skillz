@@ -1,14 +1,18 @@
 import { memo, useState, useRef, useCallback } from 'react';
 import { getLoadoutItems, estimateTokens, formatTokens, stitchLoadout } from '../skillData';
 
-function LoadoutTray({ selected, nodeMap, parentMap, contents, onRemove, onClear }) {
+function LoadoutTray({ selected, nodeMap, parentMap, contents, overviewPath, onRemove, onClear }) {
   const [copyLabel, setCopyLabel] = useState('copy loadout');
   const copyTimerRef = useRef(null);
 
   const items = getLoadoutItems(selected, nodeMap, parentMap, contents);
 
+  const overviewTokens = overviewPath && contents[overviewPath]
+    ? estimateTokens(contents[overviewPath])
+    : 0;
+
   const copyLoadout = useCallback(async () => {
-    const output = stitchLoadout(selected, nodeMap, contents);
+    const output = stitchLoadout(selected, nodeMap, contents, overviewPath);
     try {
       await navigator.clipboard.writeText(output);
       setCopyLabel('copied!');
@@ -17,7 +21,7 @@ function LoadoutTray({ selected, nodeMap, parentMap, contents, onRemove, onClear
     } catch (e) {
       console.error('Copy failed:', e);
     }
-  }, [selected, nodeMap, contents]);
+  }, [selected, nodeMap, contents, overviewPath]);
 
   // Don't render anything when nothing is selected
   if (items.length === 0) return null;
@@ -47,7 +51,8 @@ function LoadoutTray({ selected, nodeMap, parentMap, contents, onRemove, onClear
         <div className="loadout-left">
           <span className="loadout-title">loadout</span>
           <span className="token-count">
-            <span className="num">{formatTokens(totalTokens)}</span> tokens
+            <span className="num">{formatTokens(totalTokens + overviewTokens)}</span> tokens
+            {overviewTokens > 0 && <span className="overview-note"> (incl. overview)</span>}
           </span>
         </div>
         <div className="loadout-actions">

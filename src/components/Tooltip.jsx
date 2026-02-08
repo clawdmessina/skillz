@@ -1,13 +1,15 @@
 import { memo, useRef } from 'react';
 import { extractDescription } from '../skillData';
 
-function Tooltip({ node, position, contents }) {
+function Tooltip({ node, position, contents, overviewPath }) {
   const ref = useRef(null);
 
   if (!node || !position) return <div className="tooltip" id="tooltip"></div>;
 
   let desc = null;
-  if (node.skillPath) {
+  if (node.type === 'root' && overviewPath && contents[overviewPath]) {
+    desc = extractDescription(contents[overviewPath]);
+  } else if (node.skillPath) {
     const raw = contents[node.skillPath] || '';
     desc = extractDescription(raw);
   } else if (node.children) {

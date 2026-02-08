@@ -267,6 +267,51 @@ describe('buildExportLayout', () => {
   })
 })
 
+// -- stitchLoadout with overview --
+
+describe('stitchLoadout with overviewPath', () => {
+  const { nodeMap } = buildMaps(tree)
+  const overviewContents = {
+    ...contents,
+    'skills/OVERVIEW.md': '# Overview\nCross-cutting instructions here.',
+  }
+
+  it('prepends overview content when overviewPath is provided', () => {
+    const selected = new Set(['skill-a'])
+    const result = stitchLoadout(selected, nodeMap, overviewContents, 'skills/OVERVIEW.md')
+    expect(result).toMatch(/^# Overview/)
+    expect(result).toContain('Cross-cutting instructions here.')
+    expect(result).toContain('Skill A')
+  })
+
+  it('overview comes before skill content', () => {
+    const selected = new Set(['skill-a'])
+    const result = stitchLoadout(selected, nodeMap, overviewContents, 'skills/OVERVIEW.md')
+    const overviewIdx = result.indexOf('Overview')
+    const skillIdx = result.indexOf('Skill A')
+    expect(overviewIdx).toBeLessThan(skillIdx)
+  })
+
+  it('does not prepend when overviewPath is null', () => {
+    const selected = new Set(['skill-a'])
+    const result = stitchLoadout(selected, nodeMap, overviewContents, null)
+    expect(result).not.toContain('Overview')
+    expect(result).toContain('Skill A')
+  })
+
+  it('does not prepend when overview content is missing', () => {
+    const selected = new Set(['skill-a'])
+    const result = stitchLoadout(selected, nodeMap, contents, 'skills/OVERVIEW.md')
+    expect(result).not.toContain('Overview')
+    expect(result).toContain('Skill A')
+  })
+
+  it('returns only overview when no skills selected', () => {
+    const result = stitchLoadout(new Set(), nodeMap, overviewContents, 'skills/OVERVIEW.md')
+    expect(result).toBe('# Overview\nCross-cutting instructions here.')
+  })
+})
+
 // -- interpolateContent --
 
 describe('interpolateContent', () => {

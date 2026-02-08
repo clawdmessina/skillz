@@ -33,6 +33,7 @@ function Flow() {
   const [parentMap, setParentMap] = useState({});
   const [contents, setContents] = useState({});
   const [treeData, setTreeData] = useState(null);
+  const [overviewPath, setOverviewPath] = useState(null);
   const [tooltipNode, setTooltipNode] = useState(null);
   const [tooltipPos, setTooltipPos] = useState(null);
   const [editMode, setEditMode] = useState(false);
@@ -49,11 +50,13 @@ function Flow() {
       const layout = await loadLayout();
       const tree = manifest?.tree || { id: 'root', type: 'root', children: [] };
       tree.label = APP_NAME;
+      const overview = manifest?.overviewPath || null;
       const { nodeMap: nm, parentMap: pm } = buildMaps(tree);
-      const skillContents = await preloadContent(tree);
+      const skillContents = await preloadContent(tree, overview);
       const { nodes: flowNodes, edges: flowEdges } = buildFlowElements(tree, layout);
 
       setTreeData(tree);
+      setOverviewPath(overview);
       document.title = `${APP_NAME} — agent skill loadout picker`;
       setNodeMap(nm);
       setParentMap(pm);
@@ -202,6 +205,7 @@ function Flow() {
           nodeMap={nodeMap}
           parentMap={parentMap}
           contents={contents}
+          overviewPath={overviewPath}
           onRemove={handleRemoveFromLoadout}
           onClear={clearSelection}
         />
@@ -254,7 +258,7 @@ function Flow() {
         </div>
       </div>
 
-      <Tooltip node={tooltipNode} position={tooltipPos} contents={contents} />
+      <Tooltip node={tooltipNode} position={tooltipPos} contents={contents} overviewPath={overviewPath} />
     </div>
   );
 }

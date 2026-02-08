@@ -43,14 +43,16 @@ export function interpolateContent(text, baseUrl, skillFilePath) {
 
 /**
  * Preload all skill markdown content into a path->text map.
+ * If overviewPath is provided, fetches it too.
  */
-export async function preloadContent(tree) {
+export async function preloadContent(tree, overviewPath) {
   const paths = new Set();
   function collect(node) {
     if (node.skillPath) paths.add(node.skillPath);
     if (node.children) node.children.forEach(collect);
   }
   collect(tree);
+  if (overviewPath) paths.add(overviewPath);
 
   const baseUrl = window.location.origin;
 
@@ -203,9 +205,13 @@ export function getLoadoutItems(selected, nodeMap, parentMap, contents) {
 
 /**
  * Stitch selected skills into a single output string.
+ * If overviewPath is provided and content exists, it's prepended.
  */
-export function stitchLoadout(selected, nodeMap, contents) {
+export function stitchLoadout(selected, nodeMap, contents, overviewPath) {
   const parts = [];
+  if (overviewPath && contents[overviewPath]) {
+    parts.push(contents[overviewPath]);
+  }
   selected.forEach(id => {
     const node = nodeMap[id];
     if (node.skillPath) {

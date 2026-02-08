@@ -125,5 +125,12 @@ if (!manifest || !manifest.tree) {
   manifest = fs.existsSync(skillsDir) ? generateManifest(pathMap) : { tree: { id: 'root', type: 'root', children: [] } }
 }
 
+// ---- Detect OVERVIEW.md ----
+
+const overviewPath = path.join(skillsDir, 'OVERVIEW.md')
+if (fs.existsSync(overviewPath)) {
+  manifest.overviewPath = 'skills/OVERVIEW.md'
+}
+
 fs.writeFileSync(path.join(publicDir, 'skills.json'), JSON.stringify(manifest, null, 2))
-console.log(`Prepared: ${Object.keys(pathMap).length} skills found, manifest written to public/skills.json`)
+console.log(`Prepared: ${Object.keys(pathMap).length} skills found${manifest.overviewPath ? ', overview detected' : ''}, manifest written to public/skills.json`)
