@@ -31,7 +31,7 @@ export async function loadLayout() {
 
 /**
  * Interpolate ${baseUrl} and ${skillPath} in skill content.
- * baseUrl = origin + base path (e.g. "http://localhost:5173/skillz")
+ * baseUrl = origin + Vite base path (e.g. "http://localhost:5173/skillz")
  * skillPath = directory path of the skill (e.g. "/skills/playground/playground")
  */
 export function interpolateContent(text, baseUrl, skillFilePath) {
@@ -54,7 +54,8 @@ export async function preloadContent(tree, overviewPath) {
   collect(tree);
   if (overviewPath) paths.add(overviewPath);
 
-  const baseUrl = window.location.origin;
+  const base = (import.meta.env.BASE_URL || '/').replace(/\/$/, '');
+  const baseUrl = window.location.origin + base;
 
   const contents = {};
   await Promise.all([...paths].map(async (skillPath) => {

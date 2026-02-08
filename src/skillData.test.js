@@ -361,4 +361,14 @@ describe('interpolateContent', () => {
     )
     expect(result).toBe('https://example.github.io/skills/playground/playground/templates/foo.md')
   })
+
+  it('works with base path included in baseUrl', () => {
+    const baseWithPath = 'https://clawdmessina.github.io/skillz'
+    const result = interpolateContent(
+      '${baseUrl}${skillPath}/templates/foo.md',
+      baseWithPath,
+      'skills/playground/playground/SKILL.md'
+    )
+    expect(result).toBe('https://clawdmessina.github.io/skillz/skills/playground/playground/templates/foo.md')
+  })
 })
