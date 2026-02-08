@@ -1,9 +1,8 @@
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback } from 'react';
 import { Handle, Position } from '@xyflow/react';
 
 function SkillNode({ id, data }) {
   const { label, nodeType, node, isSelected, isAncestor, editMode, onClick, onTooltipShow, onTooltipHide } = data;
-  const [hovered, setHovered] = useState(false);
 
   const isRoot = nodeType === 'root';
 
@@ -19,12 +18,10 @@ function SkillNode({ id, data }) {
   }, [onClick, node]);
 
   const handleMouseEnter = useCallback((e) => {
-    setHovered(true);
     if (onTooltipShow) onTooltipShow(e, node);
   }, [onTooltipShow, node]);
 
   const handleMouseLeave = useCallback(() => {
-    setHovered(false);
     if (onTooltipHide) onTooltipHide();
   }, [onTooltipHide]);
 

@@ -27,7 +27,7 @@ function LoadoutTray({ selected, nodeMap, parentMap, contents, onRemove, onClear
     const tokens = estimateTokens(item.content);
     totalTokens += tokens;
     return (
-      <div key={item.id} className={`loadout-chip chip-${item.type}`}>
+      <div key={item.id} className="loadout-chip chip-skill">
         {item.path && <span className="chip-path">{item.path} /</span>}
         <span className="chip-name">{item.name}</span>
         <span className="chip-tokens">{formatTokens(tokens)}</span>

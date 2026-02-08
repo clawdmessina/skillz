@@ -23,6 +23,7 @@ import {
 } from './skillData';
 
 const nodeTypes = { skillNode: SkillNode };
+const APP_NAME = import.meta.env.VITE_APP_NAME || 'skillz';
 
 function Flow() {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
@@ -32,7 +33,6 @@ function Flow() {
   const [parentMap, setParentMap] = useState({});
   const [contents, setContents] = useState({});
   const [treeData, setTreeData] = useState(null);
-  const [appName, setAppName] = useState('skillz');
   const [tooltipNode, setTooltipNode] = useState(null);
   const [tooltipPos, setTooltipPos] = useState(null);
   const [editMode, setEditMode] = useState(false);
@@ -47,14 +47,14 @@ function Flow() {
     (async () => {
       const manifest = await loadManifest();
       const layout = await loadLayout();
-      const tree = manifest.tree;
-      const name = manifest.name || 'skillz';
+      const tree = manifest?.tree || { id: 'root', type: 'root', children: [] };
+      tree.label = APP_NAME;
       const { nodeMap: nm, parentMap: pm } = buildMaps(tree);
       const skillContents = await preloadContent(tree);
       const { nodes: flowNodes, edges: flowEdges } = buildFlowElements(tree, layout);
 
       setTreeData(tree);
-      setAppName(name);
+      document.title = `${APP_NAME} — agent skill loadout picker`;
       setNodeMap(nm);
       setParentMap(pm);
       setContents(skillContents);
@@ -68,7 +68,7 @@ function Flow() {
   // ---- SELECTION LOGIC (only in select mode) ----
 
   const handleNodeClick = useCallback((node) => {
-    if (editMode) return; // No selection in edit mode
+    if (editMode) return;
     setSelected(prev => {
       const next = new Set(prev);
       const descendants = getAllDescendants(node);
@@ -77,45 +77,21 @@ function Flow() {
 
       if (allSelected) {
         allIds.forEach(id => next.delete(id));
-        descendants.forEach(d => {
-          if (d.type === 'template' && d.parentSkill) {
-            const parent = nodeMap[d.parentSkill];
-            if (parent && parent.children) {
-              const anyLeft = parent.children.some(c => c.type === 'template' && next.has(c.id));
-              if (!anyLeft) next.delete(d.parentSkill);
-            }
-          }
-        });
       } else {
-        allIds.forEach(id => {
-          const n = nodeMap[id];
-          next.add(id);
-          if (n.type === 'template' && n.parentSkill) {
-            next.add(n.parentSkill);
-          }
-        });
-        if (node.skillPath) next.add(node.id);
+        allIds.forEach(id => next.add(id));
       }
 
       return next;
     });
-  }, [nodeMap, editMode]);
+  }, [editMode]);
 
   const handleRemoveFromLoadout = useCallback((removeId) => {
     setSelected(prev => {
       const next = new Set(prev);
       next.delete(removeId);
-      const removeNode = nodeMap[removeId];
-      if (removeNode?.type === 'template' && removeNode.parentSkill) {
-        const parent = nodeMap[removeNode.parentSkill];
-        if (parent?.children) {
-          const anyLeft = parent.children.some(c => c.type === 'template' && next.has(c.id));
-          if (!anyLeft) next.delete(removeNode.parentSkill);
-        }
-      }
       return next;
     });
-  }, [nodeMap]);
+  }, []);
 
   const clearSelection = useCallback(() => {
     setSelected(new Set());
@@ -207,8 +183,8 @@ function Flow() {
   const hasSelection = selected.size > 0;
 
   // Split the app name for styling: last char gets accent color
-  const nameMain = appName.slice(0, -1);
-  const nameAccent = appName.slice(-1);
+  const nameMain = APP_NAME.slice(0, -1);
+  const nameAccent = APP_NAME.slice(-1);
 
   return (
     <div className={`app ${editMode ? 'edit-mode' : 'select-mode'}`}>

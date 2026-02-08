@@ -11,26 +11,22 @@
           {
             "id": "skill-frontend-design",
             "label": "frontend design",
-            "type": "skill",
-            "skillPath": "skills/design/frontend-design/SKILL.md"
+            "type": "skill"
           },
           {
             "id": "skill-web-design-guidelines",
             "label": "web design guidelines",
-            "type": "skill",
-            "skillPath": "skills/design/web-design-guidelines/SKILL.md"
+            "type": "skill"
           },
           {
             "id": "skill-ui-ux-pro-max",
             "label": "ui/ux pro max",
-            "type": "skill",
-            "skillPath": "skills/frontend/ui-ux-pro-max/SKILL.md"
+            "type": "skill"
           },
           {
             "id": "skill-vercel-react-best-practices",
             "label": "react best practices",
-            "type": "skill",
-            "skillPath": "skills/frontend/vercel-react-best-practices/SKILL.md"
+            "type": "skill"
           }
         ]
       },
@@ -42,26 +38,22 @@
           {
             "id": "skill-xlsx",
             "label": "xlsx",
-            "type": "skill",
-            "skillPath": "skills/documents/xlsx/SKILL.md"
+            "type": "skill"
           },
           {
             "id": "skill-pdf",
             "label": "pdf",
-            "type": "skill",
-            "skillPath": "skills/documents/pdf/SKILL.md"
+            "type": "skill"
           },
           {
             "id": "skill-docx",
             "label": "docx",
-            "type": "skill",
-            "skillPath": "skills/documents/docx/SKILL.md"
+            "type": "skill"
           },
           {
             "id": "skill-pptx",
             "label": "pptx",
-            "type": "skill",
-            "skillPath": "skills/documents/pptx/SKILL.md"
+            "type": "skill"
           }
         ]
       },
@@ -73,22 +65,19 @@
           {
             "id": "skill-seo-audit",
             "label": "seo audit",
-            "type": "skill",
-            "skillPath": "skills/marketing/seo-audit/SKILL.md"
+            "type": "skill"
           },
           {
             "id": "skill-programmatic-seo",
             "label": "programmatic seo",
-            "type": "skill",
-            "skillPath": "skills/marketing/programmatic-seo/SKILL.md"
+            "type": "skill"
           }
         ]
       },
       {
         "id": "skill-playground",
         "label": "playground",
-        "type": "skill",
-        "skillPath": "skills/playground/playground/SKILL.md"
+        "type": "skill"
       }
     ]
   }

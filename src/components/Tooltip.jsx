@@ -1,4 +1,4 @@
-import { memo, useEffect, useRef } from 'react';
+import { memo, useRef } from 'react';
 import { extractDescription } from '../skillData';
 
 function Tooltip({ node, position, contents }) {
@@ -10,10 +10,6 @@ function Tooltip({ node, position, contents }) {
   if (node.skillPath) {
     const raw = contents[node.skillPath] || '';
     desc = extractDescription(raw);
-  } else if (node.type === 'template') {
-    const raw = contents[node.templatePath] || '';
-    const firstLine = raw.split('\n').find(l => l.trim() && !l.startsWith('#') && !l.startsWith('---'));
-    if (firstLine) desc = firstLine.trim();
   } else if (node.children) {
     const childCount = node.children.length;
     desc = `click to select all ${childCount} skills`;
@@ -23,7 +19,7 @@ function Tooltip({ node, position, contents }) {
   let x = position.x + pad;
   let y = position.y + pad;
 
-  // Clamp to viewport (approximate — can refine with a ref)
+  // Clamp to viewport
   if (typeof window !== 'undefined') {
     if (x + 300 > window.innerWidth - pad) x = position.x - 300 - pad;
     if (y + 80 > window.innerHeight - pad) y = position.y - 80 - pad;

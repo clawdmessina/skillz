@@ -62,15 +62,13 @@ function updatePrompt() {
 - External dependencies — if CDN is down, playground is dead
 - Prompt lacks context — include enough that it's actionable without the playground
 
-<!-- skillz:select -->
-
 ## Available templates
 
-Select the template that matches the type of playground you want to build:
+Fetch the template that matches the type of playground you want to build:
 
-- `templates/design-playground.md` — Visual design decisions (components, layouts, spacing, color, typography)
-- `templates/data-explorer.md` — Data and query building (SQL, APIs, pipelines, regex)
-- `templates/concept-map.md` — Learning and exploration (concept maps, knowledge gaps, scope mapping)
-- `templates/document-critique.md` — Document review (suggestions with approve/reject/comment workflow)
-- `templates/diff-review.md` — Code review (git diffs, commits, PRs with line-by-line commenting)
-- `templates/code-map.md` — Codebase architecture (component relationships, data flow, layer diagrams)
+- [Design playground](${baseUrl}${skillPath}/templates/design-playground.md) — Visual design decisions (components, layouts, spacing, color, typography)
+- [Data explorer](${baseUrl}${skillPath}/templates/data-explorer.md) — Data and query building (SQL, APIs, pipelines, regex)
+- [Concept map](${baseUrl}${skillPath}/templates/concept-map.md) — Learning and exploration (concept maps, knowledge gaps, scope mapping)
+- [Document critique](${baseUrl}${skillPath}/templates/document-critique.md) — Document review (suggestions with approve/reject/comment workflow)
+- [Diff review](${baseUrl}${skillPath}/templates/diff-review.md) — Code review (git diffs, commits, PRs with line-by-line commenting)
+- [Code map](${baseUrl}${skillPath}/templates/code-map.md) — Codebase architecture (component relationships, data flow, layer diagrams)

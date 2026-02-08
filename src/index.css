@@ -334,8 +334,6 @@ header::after {
 
 .loadout-chip.chip-skill { border-color: rgba(251, 146, 60, 0.3); }
 .loadout-chip.chip-skill .chip-name { color: var(--accent-orange); }
-.loadout-chip.chip-template { border-color: rgba(167, 139, 250, 0.3); }
-.loadout-chip.chip-template .chip-name { color: var(--accent-violet); }
 
 .loadout-chip .chip-remove {
   cursor: pointer;
@@ -448,8 +446,7 @@ header::after {
 }
 
 .skillz-node.ancestor {
-  border-color: var(--accent-cyan);
-  border-opacity: 0.5;
+  border-color: rgba(34, 211, 238, 0.5);
 }
 
 .skillz-node .node-type-badge {
@@ -482,7 +479,6 @@ header::after {
 
 /* Node type colors */
 .skillz-node .badge-skill { color: var(--accent-orange); }
-.skillz-node .badge-template { color: var(--accent-violet); }
 .skillz-node .badge-category { color: var(--text-dim); }
 .skillz-node .badge-root { color: var(--accent-cyan); }
 

@@ -1,92 +1,76 @@
 # skillz
 
-Agent skill loadout picker. A static web app for browsing, selecting, and copying agent skills into any AI coding tool.
+Agent skill loadout picker. A web app for browsing, selecting, and copying [agent skills](https://agentskills.io/specification) into any AI coding tool.
 
 ## What is this?
 
-Skills are markdown files with instructions, scripts, and resources that coding agents (Claude Code, GitHub Copilot, Cursor, etc.) use to perform specialized tasks. This app lets you:
+Skills are markdown files with instructions that coding agents (Claude Code, GitHub Copilot, Cursor, etc.) use to perform specialized tasks. This app lets you:
 
-1. **Browse** your team's skill library as a visual tree
+1. **Browse** your skill library as a visual node graph
 2. **Select** the skills you need for your current task (your "loadout")
-3. **Copy** the stitched-together skill content to your clipboard
+3. **Copy** the combined skill content to your clipboard
 4. **Paste** into any agent CLI or chat interface
 
 No auto-discovery, no magic. You choose what the agent gets.
 
 ### Why not just use the built-in skills system?
 
-Most agent skill systems auto-discover and auto-load skills based on fuzzy matching. That's clever engineering, but it means:
+Most agent skill systems auto-discover and auto-load skills based on fuzzy matching. That means:
 
 - You don't know when a skill fired
 - You don't know what instructions the agent is following
 - The agent's behavior changes based on opaque heuristics
 
-Skillz takes the opposite approach: **deliberate disclosure**. You pick your loadout, you know exactly what context the agent receives, zero surprises.
-
-## How skills with sub-content work
-
-Some skills have selectable sub-content (like templates). In the `SKILL.md`, a `<!-- skillz:select -->` HTML comment marker separates the always-included core instructions from the optional dispatch section.
-
-When you select a template in the UI, the app stitches the core content + your selected template(s) into one coherent block. The dispatch table listing all options is removed — the agent only sees what you chose.
+Skillz takes the opposite approach: **deliberate disclosure**. You pick your loadout, you know exactly what context the agent receives.
 
 ## Setup
 
-### Quick start (public)
-
-1. Fork this repository
-2. Enable GitHub Pages (Settings > Pages > Source: `main`, folder: `/ (root)`)
-3. Add your skills to the `skills/` directory
-4. Update `skills.json` to reflect your tree structure
-5. Visit `https://yourusername.github.io/skillz`
-
-### Private / internal (GitHub Enterprise or Team/Pro plans)
-
-Same steps as above, but:
-
-1. Fork to your org as a **private** repository
-2. Enable GitHub Pages — on Enterprise/Team/Pro plans, private repo Pages are only accessible to org members
-3. GitHub handles auth automatically. Only your org can see the site.
-
-### Self-hosted
-
-If you can't use GitHub Pages for private repos (e.g., free plan), serve it yourself:
-
 ```bash
-# Clone the repo
 git clone https://github.com/yourorg/skillz.git
 cd skillz
-
-# Serve with any static file server
-python3 -m http.server 8080
-# or
-npx serve .
-# or put behind nginx, Caddy, etc.
+npm install
+npm run dev
 ```
 
-It's just static HTML/JS/CSS. No build step, no dependencies, runs anywhere.
+That's it. Open `http://localhost:5173`.
+
+### Configuration
+
+Copy `.env.example` to `.env` to customize:
+
+```bash
+# App name — displayed in the header and browser tab
+VITE_APP_NAME=skillz
+
+# Path to the skills directory (relative or absolute)
+SKILLZ_DIR=./skills
+
+# Path to the skill tree manifest (relative or absolute)
+SKILLZ_MANIFEST=./skills.json
+```
+
+All values have sensible defaults. You don't need a `.env` file to get started.
+
+### Deploy
+
+```bash
+npm run build
+```
+
+Outputs to `dist/`. Serve it with any static file server, or use the included GitHub Actions workflow for GitHub Pages.
 
 ## Adding skills
 
-### Simple skill (no sub-content)
-
 1. Create a directory: `skills/<category>/<skill-name>/`
-2. Add a `SKILL.md` file following the [Agent Skills format](https://agentskills.io/specification)
-3. Update `skills.json` to add the node to the tree
+2. Add a `SKILL.md` file following the [Agent Skills spec](https://agentskills.io/specification)
+3. Add the skill to `skills.json`
 
-### Skill with selectable sub-content
-
-1. Create a directory with a `SKILL.md` and a `templates/` subdirectory
-2. Add the `<!-- skillz:select -->` marker in `SKILL.md` to separate core instructions from the dispatch section
-3. Put each template as a `.md` file in `templates/`
-4. Update `skills.json` with `hasSelectMarker: true` and template child nodes
-
-### skills.json structure
+The `skills.json` manifest defines the tree structure for the graph. Skill file paths are resolved automatically from the filesystem — you only need to specify IDs, labels, and types:
 
 ```json
 {
   "tree": {
     "id": "root",
-    "label": "skillz",
     "type": "root",
     "children": [
       {
@@ -97,8 +81,7 @@ It's just static HTML/JS/CSS. No build step, no dependencies, runs anywhere.
           {
             "id": "skill-my-skill",
             "label": "my skill",
-            "type": "skill",
-            "skillPath": "skills/my-category/my-skill/SKILL.md"
+            "type": "skill"
           }
         ]
       }
@@ -107,15 +90,44 @@ It's just static HTML/JS/CSS. No build step, no dependencies, runs anywhere.
 }
 ```
 
+Skill IDs must match directory names (`skill-my-skill` resolves to `skills/*/my-skill/SKILL.md`).
+
 Node types:
 - `root` — the top-level node (one per tree)
-- `category` — a grouping node (can also have `skillPath` if it's a skill+category hybrid)
-- `skill` — a selectable skill leaf with a `skillPath`
-- `template` — selectable sub-content under a skill, with `templatePath` and `parentSkill`
+- `category` — a grouping node (click to select all children)
+- `skill` — a selectable skill
 
-## Token counting
+If `skills.json` is missing or invalid, the app generates a manifest by scanning the `skills/` directory.
 
-The loadout tray shows an estimated token count for each selected skill. This uses a rough character-based estimate (~0.25 tokens per character) to help you gauge how much context you're about to consume. Actual token counts will vary by model and tokenizer.
+### URL interpolation
+
+Skills can reference their own sub-resources using variables that get resolved at runtime:
+
+- `${baseUrl}` — the origin (e.g. `http://localhost:5173`)
+- `${skillPath}` — the skill's directory path (e.g. `/skills/playground/playground`)
+
+Example in a SKILL.md:
+
+```markdown
+Fetch the template: [design playground](${baseUrl}${skillPath}/templates/design-playground.md)
+```
+
+This lets agents fetch additional resources from the skill via HTTP.
+
+## How it works
+
+- `skills/` — Your skill markdown files (the actual content)
+- `skills.json` — Tree structure for the graph (IDs, labels, types)
+- `public/layout.json` — Node positions for the graph
+- `scripts/prepare.js` — Runs before dev/build: symlinks skills into `public/`, resolves skill paths, writes enriched manifest to `public/skills.json`
+- `src/skillData.js` — Pure functions for tree processing, content loading, and loadout stitching
+- `src/App.jsx` — React app with [React Flow](https://reactflow.dev/) graph
+
+## Tests
+
+```bash
+npm test
+```
 
 ## License
 

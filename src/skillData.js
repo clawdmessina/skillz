@@ -10,8 +10,11 @@ const GRAPH_SIZE = 1000;
  * Fetch and parse skills.json manifest.
  */
 export async function loadManifest() {
-  const res = await fetch('skills.json');
-  return res.json();
+  try {
+    const res = await fetch('skills.json');
+    if (res.ok) return res.json();
+  } catch (e) { /* manifest unavailable */ }
+  return {};
 }
 
 /**
@@ -27,23 +30,38 @@ export async function loadLayout() {
 }
 
 /**
- * Preload all skill/template markdown content into a path->text map.
+ * Interpolate ${baseUrl} and ${skillPath} in skill content.
+ * baseUrl = origin + base path (e.g. "http://localhost:5173/skillz")
+ * skillPath = directory path of the skill (e.g. "/skills/playground/playground")
+ */
+export function interpolateContent(text, baseUrl, skillFilePath) {
+  const skillDir = skillFilePath.replace(/\/[^/]+$/, '');
+  return text
+    .replace(/\$\{baseUrl\}/g, baseUrl)
+    .replace(/\$\{skillPath\}/g, `/${skillDir}`);
+}
+
+/**
+ * Preload all skill markdown content into a path->text map.
  */
 export async function preloadContent(tree) {
   const paths = new Set();
   function collect(node) {
     if (node.skillPath) paths.add(node.skillPath);
-    if (node.templatePath) paths.add(node.templatePath);
     if (node.children) node.children.forEach(collect);
   }
   collect(tree);
 
+  const baseUrl = window.location.origin;
+
   const contents = {};
-  await Promise.all([...paths].map(async (path) => {
+  await Promise.all([...paths].map(async (skillPath) => {
     try {
-      const res = await fetch(path);
-      if (res.ok) contents[path] = await res.text();
-    } catch (e) { console.warn('Failed to load:', path); }
+      const res = await fetch(skillPath);
+      if (!res.ok) return;
+      const text = await res.text();
+      contents[skillPath] = interpolateContent(text, baseUrl, skillPath);
+    } catch (e) { console.warn('Failed to load:', skillPath); }
   }));
   return contents;
 }
@@ -164,40 +182,13 @@ export function getCategoryPath(id, parentMap, nodeMap) {
 }
 
 /**
- * Get the core content of a skill (above the <!-- skillz:select --> marker).
- */
-export function getSkillCoreContent(path, contents) {
-  const content = contents[path] || '';
-  const marker = '<!-- skillz:select -->';
-  const idx = content.indexOf(marker);
-  if (idx !== -1) return content.substring(0, idx).trimEnd();
-  return content;
-}
-
-/**
  * Build the list of loadout items from the selected set.
  */
 export function getLoadoutItems(selected, nodeMap, parentMap, contents) {
   const items = [];
   selected.forEach(id => {
     const node = nodeMap[id];
-    if (node.type === 'template') {
-      items.push({
-        id: node.id,
-        name: node.label,
-        path: getCategoryPath(id, parentMap, nodeMap),
-        type: 'template',
-        content: contents[node.templatePath] || '',
-      });
-    } else if (node.skillPath && node.hasSelectMarker) {
-      items.push({
-        id: node.id,
-        name: node.label + ' (core)',
-        path: getCategoryPath(id, parentMap, nodeMap),
-        type: 'skill',
-        content: getSkillCoreContent(node.skillPath, contents),
-      });
-    } else if (node.skillPath) {
+    if (node.skillPath) {
       items.push({
         id: node.id,
         name: node.label,
@@ -215,31 +206,12 @@ export function getLoadoutItems(selected, nodeMap, parentMap, contents) {
  */
 export function stitchLoadout(selected, nodeMap, contents) {
   const parts = [];
-
-  // Skills with select marker: include core content + selected templates
   selected.forEach(id => {
     const node = nodeMap[id];
-    if (node.skillPath && node.hasSelectMarker) {
-      const core = getSkillCoreContent(node.skillPath, contents);
-      parts.push(core);
-      if (node.children) {
-        node.children.forEach(child => {
-          if (child.type === 'template' && selected.has(child.id)) {
-            parts.push(contents[child.templatePath] || '');
-          }
-        });
-      }
-    }
-  });
-
-  // Standalone skills (no select marker)
-  selected.forEach(id => {
-    const node = nodeMap[id];
-    if (node.skillPath && !node.hasSelectMarker && node.type !== 'template') {
+    if (node.skillPath) {
       parts.push(contents[node.skillPath] || '');
     }
   });
-
   return parts.join('\n\n');
 }
 
