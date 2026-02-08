@@ -194,7 +194,7 @@ function Flow() {
       <header>
         <div className="logo">
           <h1>{nameMain}<span>{nameAccent}</span></h1>
-          <span className="tagline">agent skill loadout picker</span>
+          <span className="tagline">skill loadout picker</span>
         </div>
         <div className="header-actions" />
       </header>
@@ -224,7 +224,7 @@ function Flow() {
           maxZoom={4}
           defaultEdgeOptions={{
             type: 'smoothstep',
-            style: { stroke: 'var(--border-medium)', strokeWidth: 1.5 },
+            style: { stroke: 'var(--border-medium)', strokeWidth: 1 },
           }}
           proOptions={{ hideAttribution: true }}
           selectNodesOnDrag={editMode}

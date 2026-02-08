@@ -1,7 +1,6 @@
 /* ============================================================
    SKILLZ — Design System
-   Aesthetic: Industrial terminal meets luxury dashboard.
-   Dark, sharp, deliberate. Neon accents on carbon surfaces.
+   Warm parchment surfaces. Quiet depth. Paper on a desk.
    ============================================================ */
 
 *, *::before, *::after {
@@ -11,41 +10,43 @@
 }
 
 :root {
-  --bg-deep: #08090c;
-  --bg-surface: #0f1115;
-  --bg-elevated: #161920;
-  --bg-hover: #1c2029;
-  --border-subtle: #1e222a;
-  --border-medium: #2a2f3a;
-  --border-bright: #3a4050;
+  --bg-page: #fafaf5;
+  --bg-surface: #ffffff;
+  --bg-elevated: #ffffff;
+  --bg-hover: #f5f5f0;
+  --bg-selected: #eef7f8;
 
-  --text-primary: #e8eaf0;
-  --text-secondary: #8b90a0;
-  --text-muted: #555a6a;
-  --text-dim: #3a3f50;
+  --border-subtle: #e8e5e0;
+  --border-medium: #d6d3d1;
+  --border-bright: #c4c0bb;
 
-  --accent-cyan: #22d3ee;
-  --accent-cyan-dim: rgba(34, 211, 238, 0.15);
-  --accent-cyan-glow: rgba(34, 211, 238, 0.3);
-  --accent-orange: #fb923c;
-  --accent-orange-dim: rgba(251, 146, 60, 0.15);
-  --accent-green: #4ade80;
-  --accent-green-dim: rgba(74, 222, 128, 0.15);
-  --accent-rose: #fb7185;
-  --accent-rose-dim: rgba(251, 113, 133, 0.15);
-  --accent-violet: #a78bfa;
-  --accent-violet-dim: rgba(167, 139, 250, 0.15);
+  --text-primary: #1c1917;
+  --text-secondary: #57534e;
+  --text-muted: #a8a29e;
+  --text-dim: #d6d3d1;
 
-  --radius-sm: 4px;
+  --accent: #0d9488;
+  --accent-light: #ccfbf1;
+  --accent-dim: rgba(13, 148, 136, 0.08);
+  --accent-text: #0f766e;
+
+  --red-text: #dc2626;
+  --red-dim: rgba(220, 38, 38, 0.06);
+
+  --radius-sm: 6px;
   --radius-md: 8px;
   --radius-lg: 12px;
 
-  --font-display: 'Outfit', sans-serif;
-  --font-body: 'Outfit', sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  --transition-fast: 120ms ease;
-  --transition-med: 250ms cubic-bezier(0.4, 0, 0.2, 1);
+  --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-ring: 0 0 0 1px rgba(0, 0, 0, 0.06);
+
+  --transition-fast: 150ms ease;
+  --transition-med: 200ms ease;
 }
 
 html {
@@ -55,21 +56,16 @@ html {
 }
 
 body {
-  background: var(--bg-deep);
+  background: var(--bg-page);
   color: var(--text-primary);
-  font-family: var(--font-body);
-  min-height: 100vh;
+  font-family: var(--font-sans);
+  min-height: 100dvh;
   overflow: hidden;
 }
 
-/* Noise texture overlay */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
-  pointer-events: none;
-  z-index: 9999;
+::selection {
+  background-color: rgba(13, 148, 136, 0.15);
+  color: inherit;
 }
 
 /* ---- LAYOUT ---- */
@@ -77,13 +73,13 @@ body::before {
 .app {
   display: flex;
   flex-direction: column;
-  height: 100vh;
+  height: 100dvh;
 }
 
 /* ---- HEADER ---- */
 
 header {
-  padding: 16px 32px;
+  padding: 14px 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -94,23 +90,6 @@ header {
   flex-shrink: 0;
 }
 
-header::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent-cyan) 30%, var(--accent-violet) 70%, transparent);
-  opacity: 0.4;
-}
-
-/* Edit mode header indicator */
-.app.edit-mode header::after {
-  background: linear-gradient(90deg, transparent, var(--accent-violet) 30%, var(--accent-orange) 70%, transparent);
-  opacity: 0.6;
-}
-
 .logo {
   display: flex;
   align-items: baseline;
@@ -119,22 +98,21 @@ header::after {
 
 .logo h1 {
   font-family: var(--font-mono);
-  font-size: 1.4rem;
-  font-weight: 700;
-  letter-spacing: -0.5px;
+  font-size: 1.1rem;
+  font-weight: 500;
+  letter-spacing: -0.3px;
   color: var(--text-primary);
 }
 
 .logo h1 span {
-  color: var(--accent-cyan);
+  color: var(--accent-text);
 }
 
 .logo .tagline {
   font-family: var(--font-mono);
   font-size: 0.7rem;
   color: var(--text-muted);
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  font-weight: 400;
 }
 
 .header-actions {
@@ -148,17 +126,13 @@ header::after {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   font-weight: 500;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  padding: 8px 16px;
+  padding: 6px 14px;
   border: 1px solid var(--border-medium);
   border-radius: var(--radius-sm);
-  background: var(--bg-elevated);
+  background: var(--bg-surface);
   color: var(--text-secondary);
   cursor: pointer;
   transition: all var(--transition-fast);
-  position: relative;
-  overflow: hidden;
   white-space: nowrap;
 }
 
@@ -169,44 +143,43 @@ header::after {
 }
 
 .btn-sm {
-  padding: 5px 12px;
+  padding: 4px 10px;
   font-size: 0.7rem;
 }
 
 .btn-primary {
-  background: var(--accent-cyan);
-  color: var(--bg-deep);
-  border-color: var(--accent-cyan);
-  font-weight: 700;
+  background: var(--accent);
+  color: white;
+  border-color: var(--accent);
+  font-weight: 600;
 }
 
 .btn-primary:hover {
-  background: #06b6d4;
-  border-color: #06b6d4;
-  color: var(--bg-deep);
-  box-shadow: 0 0 20px var(--accent-cyan-glow);
+  background: var(--accent-text);
+  border-color: var(--accent-text);
+  color: white;
 }
 
 .btn-primary:active {
-  transform: scale(0.97);
+  transform: scale(0.98);
 }
 
 .btn-primary.copied,
 .btn-export.copied {
-  background: var(--accent-green);
-  border-color: var(--accent-green);
-  color: var(--bg-deep);
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
 }
 
 .btn-export {
-  border-color: var(--accent-violet);
-  color: var(--accent-violet);
+  border-color: var(--accent);
+  color: var(--accent-text);
 }
 
 .btn-export:hover:not(:disabled) {
-  background: var(--accent-violet-dim);
-  border-color: var(--accent-violet);
-  color: var(--accent-violet);
+  background: var(--accent-dim);
+  border-color: var(--accent);
+  color: var(--accent-text);
 }
 
 .btn-mode {
@@ -215,54 +188,43 @@ header::after {
 }
 
 .btn-mode:hover {
-  border-color: var(--accent-violet);
-  color: var(--accent-violet);
+  border-color: var(--border-bright);
+  color: var(--text-secondary);
 }
 
 .btn-mode-active {
-  border-color: var(--accent-violet);
-  color: var(--bg-deep);
-  background: var(--accent-violet);
-  font-weight: 700;
+  border-color: var(--accent);
+  color: white;
+  background: var(--accent);
+  font-weight: 600;
 }
 
 .btn-mode-active:hover {
-  background: #8b6ff0;
-  border-color: #8b6ff0;
-  color: var(--bg-deep);
+  background: var(--accent-text);
+  border-color: var(--accent-text);
+  color: white;
 }
 
 .btn:disabled {
-  opacity: 0.3;
+  opacity: 0.4;
   cursor: not-allowed;
 }
 
-/* ---- LOADOUT TRAY (at top, between header and graph) ---- */
+/* ---- LOADOUT TRAY ---- */
 
 .loadout-tray {
   border-bottom: 1px solid var(--border-subtle);
   background: var(--bg-surface);
-  padding: 12px 32px;
+  padding: 12px 24px;
   position: relative;
   z-index: 10;
   flex-shrink: 0;
-  animation: traySlideIn 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: traySlideIn 200ms ease-out;
 }
 
 @keyframes traySlideIn {
-  from { opacity: 0; transform: translateY(-8px); }
+  from { opacity: 0; transform: translateY(-4px); }
   to { opacity: 1; transform: translateY(0); }
-}
-
-.loadout-tray::after {
-  content: '';
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent-cyan) 30%, var(--accent-violet) 70%, transparent);
-  opacity: 0.2;
 }
 
 .loadout-header {
@@ -275,27 +237,30 @@ header::after {
 .loadout-left {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 12px;
 }
 
 .loadout-title {
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 2px;
-  text-transform: uppercase;
+  font-weight: 500;
   color: var(--text-muted);
 }
 
 .token-count {
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  color: var(--text-secondary);
+  color: var(--text-muted);
 }
 
 .token-count .num {
-  color: var(--accent-cyan);
+  color: var(--accent-text);
   font-weight: 600;
+}
+
+.overview-note {
+  color: var(--text-muted);
+  font-size: 0.65rem;
 }
 
 .loadout-actions {
@@ -313,37 +278,39 @@ header::after {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 4px 8px;
-  border: 1px solid var(--border-medium);
+  padding: 4px 10px;
+  border: 1px solid var(--border-subtle);
   border-radius: var(--radius-sm);
-  background: var(--bg-elevated);
+  background: var(--bg-hover);
   font-family: var(--font-mono);
-  font-size: 0.65rem;
+  font-size: 0.7rem;
   color: var(--text-primary);
-  animation: chipIn 200ms cubic-bezier(0.34, 1.56, 0.64, 1);
+  animation: chipIn 200ms ease-out;
 }
 
 @keyframes chipIn {
-  from { opacity: 0; transform: scale(0.8) translateY(4px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
+  from { opacity: 0; transform: translateY(2px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-.loadout-chip .chip-path { color: var(--text-muted); }
-.loadout-chip .chip-name { color: var(--text-primary); }
-.loadout-chip .chip-tokens { color: var(--text-dim); font-size: 0.6rem; }
+.loadout-chip .chip-path { color: var(--text-muted); font-size: 0.65rem; }
+.loadout-chip .chip-name { color: var(--text-primary); font-weight: 500; }
+.loadout-chip .chip-tokens { color: var(--text-muted); font-size: 0.6rem; }
 
-.loadout-chip.chip-skill { border-color: rgba(251, 146, 60, 0.3); }
-.loadout-chip.chip-skill .chip-name { color: var(--accent-orange); }
+.loadout-chip.chip-skill { border-color: var(--border-medium); }
+.loadout-chip.chip-skill .chip-name { color: var(--text-primary); }
 
 .loadout-chip .chip-remove {
   cursor: pointer;
-  color: var(--text-dim);
+  color: var(--text-muted);
   margin-left: 2px;
+  font-size: 0.85rem;
+  line-height: 1;
   transition: color var(--transition-fast);
 }
 
 .loadout-chip .chip-remove:hover {
-  color: var(--accent-rose);
+  color: var(--red-text);
 }
 
 /* ---- GRAPH AREA ---- */
@@ -352,19 +319,7 @@ header::after {
   position: relative;
   overflow: hidden;
   flex: 1;
-}
-
-/* Radial glow behind the graph */
-.graph-area::before {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 600px;
-  height: 600px;
-  background: radial-gradient(circle at center, rgba(34, 211, 238, 0.04) 0%, rgba(167, 139, 250, 0.02) 40%, transparent 70%);
-  pointer-events: none;
+  background: var(--bg-page);
 }
 
 /* React Flow overrides */
@@ -384,7 +339,7 @@ header::after {
   display: none;
 }
 
-/* ---- EDIT PANEL (bottom-left floating) ---- */
+/* ---- EDIT PANEL ---- */
 
 .edit-panel {
   position: absolute;
@@ -393,7 +348,7 @@ header::after {
   z-index: 5;
   display: flex;
   gap: 6px;
-  opacity: 0.5;
+  opacity: 0.6;
   transition: opacity var(--transition-med);
 }
 
@@ -407,25 +362,25 @@ header::after {
 
 /* Selection rectangle in edit mode */
 .react-flow__selection {
-  background: rgba(167, 139, 250, 0.08);
-  border: 1px solid rgba(167, 139, 250, 0.4);
+  background: rgba(13, 148, 136, 0.06);
+  border: 1px solid rgba(13, 148, 136, 0.3);
 }
 
 /* ---- CUSTOM NODES ---- */
 
 .skillz-node {
   padding: 8px 16px;
-  border-radius: 6px;
-  background: var(--bg-elevated);
-  border: 1.5px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  box-shadow: var(--shadow-xs);
   cursor: pointer;
-  transition: all var(--transition-med);
-  min-width: 120px;
+  transition: all var(--transition-fast);
+  min-width: 100px;
   text-align: center;
   user-select: none;
 }
 
-/* In edit mode, nodes get a grab cursor */
 .skillz-node.edit-mode {
   cursor: grab;
 }
@@ -436,35 +391,35 @@ header::after {
 
 .skillz-node:hover {
   background: var(--bg-hover);
-  border-color: var(--border-bright);
+  border-color: var(--border-medium);
+  box-shadow: var(--shadow-sm);
 }
 
 .skillz-node.selected {
-  background: var(--accent-cyan-dim);
-  border-color: var(--accent-cyan);
-  box-shadow: 0 0 10px var(--accent-cyan-glow);
+  background: var(--bg-selected);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-ring), 0 0 0 3px var(--accent-dim);
 }
 
 .skillz-node.ancestor {
-  border-color: rgba(34, 211, 238, 0.5);
+  border-color: var(--border-medium);
 }
 
 .skillz-node .node-type-badge {
   font-family: var(--font-mono);
-  font-size: 7.5px;
-  font-weight: 600;
-  letter-spacing: 0.8px;
-  text-transform: uppercase;
+  font-size: 8px;
+  font-weight: 500;
   display: block;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
+  color: var(--text-muted);
 }
 
 .skillz-node .node-label {
   font-family: var(--font-mono);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 500;
   color: var(--text-secondary);
-  transition: color var(--transition-med);
+  transition: color var(--transition-fast);
 }
 
 .skillz-node:hover .node-label,
@@ -473,60 +428,59 @@ header::after {
 }
 
 .skillz-node.ancestor .node-label {
-  color: var(--text-primary);
-  opacity: 0.7;
+  color: var(--text-secondary);
 }
 
-/* Node type colors */
-.skillz-node .badge-skill { color: var(--accent-orange); }
+/* Node type badge colors */
+.skillz-node .badge-skill { color: var(--text-muted); }
 .skillz-node .badge-category { color: var(--text-dim); }
-.skillz-node .badge-root { color: var(--accent-cyan); }
+.skillz-node .badge-root { color: var(--accent-text); }
 
-/* Root node — styled distinctly but NOT always glowing */
+/* Root node */
 .skillz-node.root-node {
   background: var(--bg-surface);
-  border: 2px solid var(--border-bright);
-  padding: 14px 24px;
-  min-width: 160px;
+  border: 1px solid var(--border-medium);
+  box-shadow: var(--shadow-sm);
+  padding: 12px 24px;
+  min-width: 140px;
 }
 
 .skillz-node.root-node .node-label {
   color: var(--text-primary);
-  font-size: 16px;
-  font-weight: 700;
-  letter-spacing: 2px;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.3px;
 }
 
 .skillz-node.root-node:hover {
-  border-color: var(--accent-cyan);
-  box-shadow: 0 0 20px rgba(34, 211, 238, 0.1);
+  border-color: var(--border-bright);
+  box-shadow: var(--shadow-md);
 }
 
 .skillz-node.root-node:hover .node-label {
-  color: var(--accent-cyan);
+  color: var(--text-primary);
 }
 
-/* Root node when selected — then it glows */
 .skillz-node.root-node.selected {
-  border-color: var(--accent-cyan);
-  box-shadow: 0 0 30px rgba(34, 211, 238, 0.15), 0 0 60px rgba(34, 211, 238, 0.06);
+  border-color: var(--accent);
+  box-shadow: var(--shadow-ring), 0 0 0 3px var(--accent-dim);
 }
 
 .skillz-node.root-node.selected .node-label {
-  color: var(--accent-cyan);
+  color: var(--accent-text);
 }
 
 /* ---- EDGES ---- */
 
 .react-flow__edge-path {
   stroke: var(--border-medium);
-  stroke-width: 1.5;
+  stroke-width: 1;
 }
 
 .react-flow__edge.highlighted .react-flow__edge-path {
-  stroke: var(--accent-cyan);
+  stroke: var(--accent);
   stroke-width: 1.5;
-  opacity: 0.6;
+  opacity: 0.5;
 }
 
 /* ---- TOOLTIP ---- */
@@ -535,19 +489,19 @@ header::after {
   position: fixed;
   z-index: 10000;
   padding: 8px 12px;
-  background: var(--bg-elevated);
-  border: 1px solid var(--border-medium);
-  border-radius: var(--radius-sm);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
   font-family: var(--font-mono);
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   color: var(--text-secondary);
   pointer-events: none;
   opacity: 0;
   transform: translateY(4px);
   transition: opacity 150ms ease, transform 150ms ease;
-  max-width: 350px;
+  max-width: 320px;
   line-height: 1.5;
-  box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+  box-shadow: var(--shadow-md);
 }
 
 .tooltip.visible {
@@ -555,8 +509,16 @@ header::after {
   transform: translateY(0);
 }
 
-.tooltip .tip-name { color: var(--text-primary); font-weight: 600; margin-bottom: 4px; }
-.tooltip .tip-desc { color: var(--text-muted); font-size: 0.65rem; }
+.tooltip .tip-name {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 3px;
+}
+
+.tooltip .tip-desc {
+  color: var(--text-muted);
+  font-size: 0.65rem;
+}
 
 /* ---- RESPONSIVE ---- */
 
